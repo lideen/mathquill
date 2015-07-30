@@ -35,7 +35,7 @@ Controller.open(function(_) {
 
         // delete the mouse handlers now that we're not dragging anymore
         rootjQ.unbind('mousemove', mousemove);
-        $(e.target.ownerDocument).unbind('mousemove', docmousemove).unbind('mouseup', mouseup);
+        $(e.target.ownerDocument).unbind('mousemove', docmousemove).unbind('mouseup.mathquill', mouseup);
       }
 
       if (ctrlr.blurred) {
@@ -48,8 +48,8 @@ Controller.open(function(_) {
       cursor.blink = noop;
       ctrlr.seek($(e.target), e.pageX, e.pageY).cursor.startSelection();
 
-      rootjQ.mousemove(mousemove);
-      $(e.target.ownerDocument).mousemove(docmousemove).mouseup(mouseup);
+      rootjQ.bind('mousemove.mathquill', mousemove);
+      $(e.target.ownerDocument).bind('mousemove.mathquill', docmousemove).bind('mouseup.mathquill', mouseup);
       // listen on document not just body to not only hear about mousemove and
       // mouseup on page outside field, but even outside page, except iframes: https://github.com/mathquill/mathquill/commit/8c50028afcffcace655d8ae2049f6e02482346c5#commitcomment-6175800
     });
