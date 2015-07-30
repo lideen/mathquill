@@ -20,7 +20,8 @@ BASE_SOURCES = \
 
 SOURCES_FULL = \
   $(BASE_SOURCES) \
-  $(SRC_DIR)/commands/*.js \
+  $(SRC_DIR)/commands/math.js \
+  $(SRC_DIR)/commands/text.js \
   $(SRC_DIR)/commands/*/*.js
 
 SOURCES_BASIC = \
