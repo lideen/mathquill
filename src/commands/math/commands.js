@@ -468,6 +468,30 @@ var Vec = LatexCmds.vec = P(MathCommand, function(_, super_) {
   _.textTemplate = ['vec(', ')'];
 });
 
+var Wide = P(MathCommand, function(_, super_) {
+  _.init = function(name, scalefactor, ch, html) {
+    this.name = name;
+    this.scalefactor = scalefactor;
+    var htmlTemplate =
+      '<span class="mq-non-leaf">'
+    +   '<span class="mq-wide' + name + '-prefix">'
+    +     '<span class="mq-scaled">' + html + '</span>'
+    +   '</span>'
+    +   '<span class="mq-wide' + name + '-stem">&0</span>'
+    + '</span>';
+    super_.init.call(this, ch, htmlTemplate);
+  };
+  _.textTemplate = ['wide' + this.name + '(', ')'];
+  _.reflow = function() {
+    var block = this.ends[R].jQ;
+    var hat = block.prev().children().first();
+    scale(hat, block.innerWidth() / hat.innerWidth() * this.scalefactor, 1.0);
+  };
+});
+LatexCmds.widehat = bind(Wide,'hat', 1.3, '\\widehat ','^');
+LatexCmds.widetilde = bind(Wide, 'tilde', 1.1, '\\widetilde ','~');
+
+
 var NthRoot =
 LatexCmds.nthroot = P(SquareRoot, function(_, super_) {
   _.htmlTemplate =
