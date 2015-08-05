@@ -248,6 +248,24 @@ x+\class{testclass}{y}+z
 
 <p>In Safari on iOS, this should be focusable but not bring up the on-screen keyboard; to test, try focusing anything else and confirm this blurs: <span id="no-kbd-math"></span> (confirmed working on iOS 6.1.3)</p>
 
+<h3>Matrices</h3>
+<span id="matrix" class="mathquill-math-field">
+\begin{matrix}
+  1 & 2 & 3 \\
+  4 & 5 & 6
+\end{matrix}
+</span>
+<button id="matrix_math">Make</button>
+<button id="matrix_revert">Revert</button>
+<script>
+  $('#matrix_revert').click(function() {
+    var mq = MathQuill.MathField($('#matrix').get(0)).revert();
+  });
+  $('#matrix_math').click(function() {
+    var mq = MathQuill.MathField($('#matrix').get(0));
+  });
+</script>
+
 </div>
 <script type="text/javascript">
 window.onerror = function() {
