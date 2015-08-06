@@ -230,7 +230,7 @@ var SupSub = P(MathCommand, function(_, super_) {
   };
   _.respace = _.siblingCreated = _.siblingDeleted = function(opts, dir) {
     if (dir === R) return; // ignore if sibling only changed on the right
-    this.jQ.toggleClass('mq-limit', this[L].ctrlSeq === '\\int ');
+    this.jQ.toggleClass('mq-limit', ['\\int ', '\\iint ', '\\iiint ', '\\iiiint ', '\\oint ', '\\oiint ', '\\oiiint '].indexOf(this[L].ctrlSeq) > -1);
   };
   _.addBlock = function(block) {
     if (this.supsub === 'sub') {

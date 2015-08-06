@@ -199,7 +199,10 @@ LatexCmds.spadesuit = bind(VanillaSymbol, '\\spadesuit ', '&#9824;');
 LatexCmds.square = LatexCmds.Box = bind(VanillaSymbol, '\\square ', '&#9723;');
 
 //variable-sized
-LatexCmds.oint = bind(VanillaSymbol, '\\oint ', '&#8750;');
+LatexCmds.oint = bind(Symbol, '\\oint ', '<big>&#8750;</big>');
+LatexCmds.oiint = bind(Symbol, '\\oiint ', '<big>&#8751;</big>');
+LatexCmds.oiiint = bind(Symbol, '\\oiiint ', '<big>&#8752;</big>');
+
 LatexCmds.bigcap = bind(VanillaSymbol, '\\bigcap ', '&#8745;');
 LatexCmds.bigcup = bind(VanillaSymbol, '\\bigcup ', '&#8746;');
 LatexCmds.bigsqcup = bind(VanillaSymbol, '\\bigsqcup ', '&#8852;');
@@ -219,10 +222,18 @@ LatexCmds.opencurlybrace = LatexCmds.lbrace = bind(VanillaSymbol, '\\lbrace ', '
 LatexCmds.closecurlybrace = LatexCmds.rbrace = bind(VanillaSymbol, '\\rbrace ', '}');
 
 //various symbols
-
 LatexCmds['∫'] =
 LatexCmds['int'] =
 LatexCmds.integral = bind(Symbol,'\\int ','<big>&int;</big>');
+LatexCmds['∬'] =
+LatexCmds['iint'] =
+LatexCmds.iintegral = bind(Symbol,'\\iint ','<big>&#8748;</big>');
+LatexCmds['∭'] =
+LatexCmds['iiint'] =
+LatexCmds.iintegral = bind(Symbol,'\\iiint ','<big>&#8749;</big>');
+LatexCmds['⨌'] =
+LatexCmds['iiiint'] =
+LatexCmds.iintegral = bind(Symbol,'\\iiiint ','<big>&#10764;</big>');
 
 LatexCmds.caret = bind(VanillaSymbol,'\\text{^}','^');
 LatexCmds.underscore = bind(VanillaSymbol,'\\_','_');
