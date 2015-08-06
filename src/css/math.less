@@ -42,7 +42,10 @@
 
   // TODO: what's the difference between these?
   .mq-empty {
-    background: #ccc;
+    background: #fff;
+    border-width: 1px;
+    border-color: rgba(0, 0, 0, 0.2);
+    border-style: dashed;
     &.mq-root-block {
       background: transparent;
     }
@@ -205,6 +208,7 @@
   .mq-matrix {
     display: inline-table;
     vertical-align: middle;
+    border-spacing: 1px;
   }
 
   .mq-matrix > span.mq-row {
@@ -217,11 +221,6 @@
     padding: 0 2px 0 2px;
     border-collapse: collapse;
     border-spacing: 2px;
-    border: 1px solid transparent;
-  }
-
-  .mq-matrix > span.mq-row > span.mq-cell.mq-empty {
-    border-color: rgba(0, 0, 0, .1);
   }
 
   ////

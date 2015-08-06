@@ -13,9 +13,11 @@ LatexCmds.otimes = P(BinaryOperator, function(_, super_) {
 });
 
 LatexCmds['≠'] = LatexCmds.ne = LatexCmds.neq = bind(BinaryOperator,'\\ne ','&ne;');
+LatexCmds['≢'] = LatexCmds.nequiv = bind(BinaryOperator,'\\not\\equiv ','&#8802;');
 
-LatexCmds.ast = LatexCmds.star = LatexCmds.loast = LatexCmds.lowast =
+LatexCmds.ast = LatexCmds.loast = LatexCmds.lowast =
   bind(BinaryOperator,'\\ast ','&lowast;');
+LatexCmds.star = bind(BinaryOperator, '\\star', '&#8902;');
   //case 'there4 = // a special exception for this one, perhaps?
 LatexCmds.therefor = LatexCmds.therefore =
   bind(BinaryOperator,'\\therefore ','&there4;');
@@ -25,7 +27,8 @@ LatexCmds.because = bind(BinaryOperator,'\\because ','&#8757;');
 
 LatexCmds.prop = LatexCmds.propto = bind(BinaryOperator,'\\propto ','&prop;');
 
-LatexCmds['≈'] = LatexCmds.asymp = LatexCmds.approx = bind(BinaryOperator,'\\approx ','&asymp;');
+LatexCmds['≈'] = LatexCmds.approx = bind(BinaryOperator,'\\approx ','&asymp;');
+LatexCmds.asymp = bind(BinaryOperator,'\\asymp ','&#8781;');
 
 LatexCmds.isin = LatexCmds['in'] = bind(BinaryOperator,'\\in ','&isin;');
 
