@@ -435,3 +435,10 @@ MathQuill.MathField = APIFnFor(P(EditableField, function(_, super_) {
     this.initRootAndEvents(RootMathBlock(), el, opts);
   };
 }));
+
+MathQuill.StaticMathNoMouse = APIFnFor(P(AbstractMathQuill, function(_, super_) {
+  _.init = function(el) {
+    this.initRoot(MathBlock(), el.addClass('mq-math-mode'));
+    this.__controller.staticMathTextareaEvents();
+  };
+}));
