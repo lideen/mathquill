@@ -752,89 +752,102 @@ LatexCmds.choose = P(Binomial, function(_) {
 });
 
 var Matrix =
-    LatexCmds.begin = P(MathCommand, function (_, _super) {
-        _.ctrlSeq = '\\matrix';
-        _.numBlocks = function () {
-            return this.col * this.row;
-        };
-        _.init = function (col, row) {
-            this.col = col;
-            this.row = row;
-            var html = '';
-            for (var i = 0; i < row; i++) {
-                var r = '';
-                for (var j = 0; j < col; j++)
-                    r += '<span class="mq-cell">&' + (i * col + j) + '</span>'
-                html += '<span class="mq-row">' + r + '</span>';
+LatexCmds.begin = P(MathCommand, function (_, _super) {
+    _.ctrlSeq = '\\matrix';
+    _.numBlocks = function () {
+        return this.col * this.row;
+    };
+    _.init = function (col, row) {
+        this.col = col;
+        this.row = row;
+        var html = '';
+        for (var i = 0; i < row; i++) {
+            var r = '';
+            for (var j = 0; j < col; j++)
+                r += '<span class="mq-cell">&' + (i * col + j) + '</span>'
+            html += '<span class="mq-row">' + r + '</span>';
+        }
+        _super.init.call(this, this.ctrlSeq, '<span class="mq-matrix">' + html + '</span>', ['text']);
+    };
+    _.latex = function () {
+        var latex = '';
+        var index = 1;
+        var c = this.col;
+        var numBlocks = this.numBlocks();
+
+        this.eachChild(function (child) {
+            if (child.ends[L])
+                latex += child.latex();
+            if ((index) != numBlocks) {
+                if (index % c == 0)
+                    latex += " \\\\ ";
+                else
+                    latex += " & ";
             }
-            _super.init.call(this, this.ctrlSeq, '<span class="mq-matrix">' + html + '</span>', ['text']);
-        };
-        _.latex = function () {
-            var latex = '';
-            var index = 1;
-            var c = this.col;
-            var numBlocks = this.numBlocks();
-
-            this.eachChild(function (child) {
-                if (child.ends[L])
-                    latex += child.latex();
-                if ((index) != numBlocks) {
-                    if (index % c == 0)
-                        latex += " \\\\ ";
-                    else
-                        latex += " & ";
-                }
-                index++;
+            index++;
+        });
+        return '\\begin{matrix}' + latex + '\\end{matrix}';
+    };
+    _.text = function () {
+        var cells = [];
+        this.eachChild(function (child) {
+            if (child.ends[L])
+                cells.push(child.text())
+        });
+        return 'matrix[' + this.col + '][' + this.row + ']{' + cells.join(',') + '}';
+    };
+    _.parser = function () {
+        var block = latexMathParser.block;
+        var string = Parser.string;
+        var regex = Parser.regex;
+        var optWhitespace = Parser.optWhitespace;
+        return regex(/^\{matrix\}[\s\S]*?\\end\{matrix\}/).map(function (body) {
+            body = body.substring(8, body.length - 12).trim();
+            var rows = body.split(/\\\\/).map(function (r) {
+                return r.trim();
             });
-            return '\\begin{matrix}' + latex + '\\end{matrix}';
-        };
-        _.text = function () {
+            var rowsCount = rows.length;
+            var colsCount = 0;
             var cells = [];
-            this.eachChild(function (child) {
-                if (child.ends[L])
-                    cells.push(child.text())
+            rows.forEach(function (r) {
+                var cols = r.split(/&/);
+                colsCount = Math.max(colsCount, cols.length);
+                cells = cells.concat(cols);
             });
-            return 'matrix[' + this.col + '][' + this.row + ']{' + cells.join(',') + '}';
-        };
-        _.parser = function () {
-            var block = latexMathParser.block;
-            var string = Parser.string;
-            var regex = Parser.regex;
-            var optWhitespace = Parser.optWhitespace;
-            return regex(/^\{matrix\}[\s\S]*?\\end\{matrix\}/).map(function (body) {
-                body = body.substring(8, body.length - 12).trim();
-                var rows = body.split(/\\\\/).map(function (r) {
-                    return r.trim();
-                });
-                var rowsCount = rows.length;
-                var colsCount = 0;
-                var cells = [];
-                rows.forEach(function (r) {
-                    var cols = r.split(/&/);
-                    colsCount = Math.max(colsCount, cols.length);
-                    cells = cells.concat(cols);
-                });
 
-                var matrix = Matrix(colsCount, rowsCount);
+            var matrix = Matrix(colsCount, rowsCount);
 
-                var blocks = matrix.blocks = Array(matrix.numBlocks());
-                for (var i = 0; i < blocks.length; i++) {
-                    var newBlock = blocks[i] = latexMathParser.parse(cells[i]);
-                    newBlock.adopt(matrix, matrix.ends[R], 0);
-                }
-                return matrix;
-            })
-        };
-        _.finalizeTree = function () {
-            for (var i = 0; i < this.row; i++) {
-                for (var j = 0; j < this.col; j++) {
-                    var b = this.blocks[i * this.col + j];
-                    b.upOutOf = (i == 0 && j != 0) ? this.blocks[this.row * this.col - this.row + j - 1] : this.blocks[(i - 1) * this.col + j];
-                    b.downOutOf = ((i + 1) == this.row && (j + 1) != this.col) ? this.blocks[j + 1] : this.blocks[(i + 1) * this.col + j];
-                }
+            var blocks = matrix.blocks = Array(matrix.numBlocks());
+            for (var i = 0; i < blocks.length; i++) {
+                var newBlock = blocks[i] = latexMathParser.parse(cells[i]);
+                newBlock.adopt(matrix, matrix.ends[R], 0);
+            }
+            return matrix;
+        });
+    };
+    _.finalizeTree = function () {
+        for (var i = 0; i < this.row; i++) {
+            for (var j = 0; j < this.col; j++) {
+                var b = this.blocks[i * this.col + j];
+                b.upOutOf = (i == 0 && j != 0) ? this.blocks[this.row * this.col - this.row + j - 1] : this.blocks[(i - 1) * this.col + j];
+                b.downOutOf = ((i + 1) == this.row && (j + 1) != this.col) ? this.blocks[j + 1] : this.blocks[(i + 1) * this.col + j];
             }
         }
-    });
+    }
+});
+
+/**
+ * \mathbb{x} parsing added by Jonas Lidén for dugga
+ **/
+LatexCmds.mathbb = P(VanillaSymbol, function(_, _super) {
+  _.parser = function() {
+    var regex = Parser.regex;
+    var string = Parser.string;
+    return string('{').then(regex(/^([N,P,Z,Q,R,C,H])/)).skip(string('}')).map(function (body) {
+      return LatexCmds[body]();
+    })
+  };
+});
 
 var InnerMathField = P(MathQuill.MathField, function(_) {
   _.init = function(root, container) {
