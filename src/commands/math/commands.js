@@ -849,6 +849,25 @@ LatexCmds.mathbb = P(VanillaSymbol, function(_, _super) {
   };
 });
 
+LatexCmds.not = P(BinaryOperator, function(_, _super) {
+  _.init = function() {
+    _super.init.call(this, '\\not', '&sol;');
+  };
+  _.parser = function() {
+    var regex = Parser.regex;
+    var string = Parser.string;
+    return string('\\').then(regex(/^(\w+)/)).map(function (body) {
+      var command = 'not' + body;
+      var latexCmd = LatexCmds[command];
+      if (latexCmd) {
+        return latexCmd();
+      } else {
+        return LatexCmds.not();
+      }
+    }).or(Parser.succeed(LatexCmds.not()));
+  };
+});
+
 var InnerMathField = P(MathQuill.MathField, function(_) {
   _.init = function(root, container) {
     RootBlockMixin(root);
